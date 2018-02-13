@@ -111,7 +111,6 @@ class AtomicStatusCheck:
                 'Received a non 200 response: %d', resp.status_code)
             return []
 
- 
     def has_version(self, version):
         """
         Checks a given version against the known versions from the
@@ -127,12 +126,12 @@ class AtomicStatusCheck:
 
 def example():  # pragma: no cover
     # Create a logger to pass in
-    l = logging.getLogger('AtomicStatusCheck')
-    l.setLevel(logging.DEBUG)
-    l.handlers = [logging.StreamHandler()]
+    logger = logging.getLogger('AtomicStatusCheck')
+    logger.setLevel(logging.DEBUG)
+    logger.handlers = [logging.StreamHandler()]
 
     # Create an instance
-    av = AtomicStatusCheck(logger=l)
+    av = AtomicStatusCheck(logger=logger)
 
     # Get the first instance to verify a compose status
     first_version = next(av.get_versions())
