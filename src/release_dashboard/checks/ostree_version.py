@@ -23,6 +23,20 @@ import requests
 
 
 class OstreeVersionSniffer:
+    """
+    Class for retrieving and inspecting ostree data from an image.
+
+    Example::
+
+       with OstreeVersionSniffer('Fedora-Atomic-27-20180216.0') as o:
+           print(o.get_ostree_version())
+
+    Example::
+
+       o = OstreeVersionSniffer('Fedora-Atomic-27-20180216.0')
+       print(o.get_ostree_version())
+       o.clean_up()
+    """
 
     def __init__(self, version):
         """
@@ -97,9 +111,3 @@ class OstreeVersionSniffer:
         Do cleanup on context management exit.
         """
         self.clean_up()
-
-
-if __name__ == '__main__':  # pragma: no cover
-    # Example
-    with OstreeVersionSniffer('Fedora-Atomic-27-20180216.0') as o:
-        print(o.get_ostree_version())
