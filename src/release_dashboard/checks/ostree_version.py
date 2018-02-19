@@ -34,7 +34,7 @@ class OstreeVersionSniffer:
         self._image_path = None
         self._version = version
 
-    def __enter__(self):
+    def __enter__(self):  # pragma: no cover
         """
         Used for context management.
         """
@@ -77,6 +77,7 @@ class OstreeVersionSniffer:
             data = g.cat(
                 '/ostree/deploy/fedora-atomic/deploy/'
                 '{}/usr/lib/os.release.d/os-release-fedora'.format(dir))
+            print(type(data), data)
             version = re.findall("OSTREE_VERSION=(.*)", data)[0]
             g.shutdown()
             return version
@@ -91,7 +92,7 @@ class OstreeVersionSniffer:
         if self._image_path:
             os.unlink(self._image_path)
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, type, value, traceback):  # pragma: no cover
         """
         Do cleanup on context management exit.
         """
