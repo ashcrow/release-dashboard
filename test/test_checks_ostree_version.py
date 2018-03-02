@@ -25,6 +25,16 @@ import requests
 from io import BytesIO
 from unittest import mock
 
+
+# Skip this test if guestfs can not be used
+try:
+    import guestfs
+except:
+    import sys
+    sys.stderr.write('\n\n!!! Unable to import guestfs. '
+          'Coverage will likely not be able to meet the minimum !!!\n\n')
+    pytest.importorskip("guestfsa")
+
 from release_dashboard.checks import ostree_version
 
 OS_RELEASE = """\
