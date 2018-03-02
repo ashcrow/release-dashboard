@@ -1,10 +1,13 @@
 language: python
 python:
   - "3.6"
+before_install:
+  - "sudo apt-get install -qq python3-guestfs libguestfs-tools"
 install:
   - "pip install -r requirements.txt"
   - "pip install -r test-requirements.txt"
 script:
+  - "sudo cp -v /usr/lib/python3/dist-packages/*guestfs* $VIRTUAL_ENV/lib/python3.6/site-packages/"
   - "python setup.py flake8"
   - "python setup.py test"
 notifications:
