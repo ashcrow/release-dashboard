@@ -16,6 +16,8 @@
 Tracker related integrations.
 """
 
+import jinja2
+
 from abc import ABCMeta, abstractmethod
 
 
@@ -44,3 +46,37 @@ class Tracker(metaclass=ABCMeta):  # pragma: no cover
         :raises: release_dashboard.trackers.TrackerError
         """
         pass
+
+    def create_templatized_issue(self, title, template_name, context):
+        """
+        Creates an issue in an external tracker based on a template.
+
+        :param title: The title of the issue.
+        :type title: str
+        :param body: Name of internal template or full path.
+        :type template_name: str
+        :param context: Context to pass to the template.
+        :type context: dict
+        :returns: The identifier of the new issue
+        :rtype: str
+        :raises: release_dashboard.trackers.TrackerError
+        """
+        tpl = None
+        if template_name.startswith('/'):
+            try:
+                with open(template_name, 'r') as template_fobj:
+                    tpl = jinja2.Template(template_fobj.read())
+            except Exception as err:
+                raise TrackerError(err.__class__.__name__, *err.args)
+        else:
+            try:
+                env = jinja2.Environment(
+                    loader=jinja2.PackageLoader(
+                        'release_dashboard', 'templates'),
+                    autoescape=jinja2.select_autoescape(['html']))
+                tpl = env.get_template(template_name)
+            except jinja2.exceptions.TemplateError as err:
+                raise TypeError(err.__class__.__name__, *err.args)
+
+        content = tpl.render(**context)
+        return self.create_issue(title, content)

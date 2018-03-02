@@ -63,3 +63,26 @@ class TestPagureTracker:
             with pytest.raises(TrackerError) as err:
                 pg.create_issue('title', 'body')
                 assert err.args == expected_args
+
+    def test_create_templateized_issue(self):
+        """
+        Ensure creation of a templatized issues works as expected.
+        """
+        with mock.patch('release_dashboard.trackers.pagure.PagureTracker.create_issue') as _ci:
+            expected_result = '100'
+            _ci.return_value = expected_result
+
+            pg = PagureTracker('mine', auth_token='123')
+            assert pg.create_templatized_issue(
+                'title', 'create_release_request.txt', {}) == expected_result
+
+    def test_create_templateized_issue_with_errors(self):
+        """
+        Ensure creation of a templatized issues fail as expected.
+        """
+        with mock.patch('release_dashboard.trackers.pagure.PagureTracker.create_issue') as _ci:
+            with pytest.raises(TrackerError) as error:
+                pg = PagureTracker('mine', auth_token='123')
+                pg.create_templatized_issue(
+                    'title', '/tmp/idonotexist.txt.txt', {})
+                assert error.args[0] == 'FileNotFoundError'
