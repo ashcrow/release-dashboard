@@ -1,0 +1,5 @@
+You should be able to do it with this command:
+
+```
+python push-two-week-atomic.py -k fedora-{{ verison }} -r {{ version }} --pungi-compose-id Fedora-Atomic-{{ version }}-{{ pungi_id }} --ostree-pungi-compose-id Fedora-{{ version }}-updates-{{ ostree_pungi_id }}
+```
