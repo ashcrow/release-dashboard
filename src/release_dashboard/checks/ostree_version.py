@@ -55,16 +55,19 @@ class OstreeVersionSniffer:
         self.download_image(self._version)
         return self
 
-    def download_image(self, version):
+    def download_image(self, version, url=None):
         """
         Downloads a specific cloud image to inspect.
 
         :param version: The version of the image to download.
         :type version: str
+        :param url: Optionally override the url template.
+        :type url: str
         """
-        url = ("https://kojipkgs.fedoraproject.org/compose/twoweek/"
-               "{}/compose/CloudImages/x86_64/images/{}.x86_64.qcow2".format(
-                   version, version))
+        if url is None:
+            url = ("https://kojipkgs.fedoraproject.org/compose/twoweek/{}/"
+                   "compose/CloudImages/x86_64/images/{}.x86_64.qcow2").format(
+                       version, version)
         _, self._image_path = tempfile.mkstemp()
         r = requests.get(url, stream=True)
         if r.status_code != 200:
